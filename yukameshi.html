@@ -1,0 +1,805 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ゆかめし - ひまわりご飯ノート 🌻</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- FontAwesome for Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Google Fonts (Zen Maru Gothic for warm cute look) -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Zen+Maru+Gothic:wght@400;500;700;900&display=swap" rel="stylesheet">
+
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        sunflower: {
+                            50: '#FFFDE7',
+                            100: '#FFF9C4',
+                            300: '#FFF59D',
+                            400: '#FFEE58',
+                            500: '#FBC02D',
+                            600: '#F57F17',
+                        },
+                        warmOrange: {
+                            400: '#FFA726',
+                            500: '#FB8C00',
+                            600: '#E65100',
+                        },
+                        veggieGreen: {
+                            100: '#E8F5E9',
+                            400: '#66BB6A',
+                            500: '#4CAF50',
+                            600: '#2E7D32',
+                        },
+                        warmBg: '#FFFDF9',
+                    },
+                    fontFamily: {
+                        sans: ['Zen Maru Gothic', 'sans-serif'],
+                    },
+                    boxShadow: {
+                        'soft': '0 10px 25px -5px rgba(251, 192, 45, 0.15), 0 8px 10px -6px rgba(0, 0, 0, 0.05)',
+                        'card': '0 4px 15px rgba(0,0,0,0.04)',
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        body {
+            font-family: 'Zen Maru Gothic', sans-serif;
+            background-color: #FFFDF9;
+            color: #4A3B32;
+        }
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar {
+            width: 6px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #FFFDE7;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #FBC02D;
+            border-radius: 10px;
+        }
+        /* Speech Bubble Arrow */
+        .bubble-arrow::after {
+            content: '';
+            position: absolute;
+            left: -12px;
+            top: 20px;
+            border-width: 8px 12px 8px 0;
+            border-style: solid;
+            border-color: transparent #FFFFFF transparent transparent;
+            display: block;
+            width: 0;
+        }
+        /* Pulse Animation for Yuka-chan */
+        @keyframes gentle-bounce {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-4px); }
+        }
+        .animate-yuka {
+            animation: gentle-bounce 3s infinite ease-in-out;
+        }
+    </style>
+</head>
+<body class="min-h-screen pb-24 md:pb-8 flex justify-center selection:bg-sunflower-300 selection:text-warmOrange-600">
+
+    <!-- App Container (Mobile First Layout) -->
+    <div class="w-full max-w-md bg-white min-h-screen shadow-xl relative flex flex-col border-x border-amber-100">
+
+        <!-- Top Header -->
+        <header class="bg-gradient-to-r from-sunflower-300 via-sunflower-100 to-amber-100 p-4 sticky top-0 z-20 shadow-sm border-b border-sunflower-300/40">
+            <div class="flex items-center justify-between">
+                <div class="flex items-center gap-2">
+                    <span class="text-2xl animate-spin" style="animation-duration: 12s;">🌻</span>
+                    <div>
+                        <h1 class="text-xl font-bold text-amber-900 leading-tight">ゆかめし</h1>
+                        <p class="text-[11px] text-amber-800 font-medium">ひまわりご飯ノート</p>
+                    </div>
+                </div>
+                <div class="flex items-center gap-2">
+                    <button id="today-date-badge" class="bg-white/80 backdrop-blur-sm text-amber-900 px-3 py-1 rounded-full text-xs font-bold border border-sunflower-400 flex items-center gap-1 shadow-sm">
+                        <i class="fa-regular fa-calendar-check text-warmOrange-500"></i>
+                        <span id="header-date">9月27日(日)</span>
+                    </button>
+                </div>
+            </div>
+        </header>
+
+        <!-- Main Scrollable Area -->
+        <main class="flex-1 p-4 space-y-5 overflow-y-auto">
+
+            <!-- Yuka-chan Banner Area -->
+            <section class="bg-gradient-to-br from-sunflower-50 to-amber-50 rounded-2xl p-4 border-2 border-sunflower-300 shadow-soft relative overflow-hidden">
+                <div class="flex items-start gap-3">
+                    <!-- Yuka-chan Avatar -->
+                    <div class="relative shrink-0 animate-yuka">
+                        <div class="w-16 h-16 rounded-full bg-sunflower-400 p-1 border-2 border-white shadow-md flex items-center justify-center overflow-hidden">
+                            <!-- Yuka-chan SVG Illustration (Sunflower Style Smile) -->
+                            <svg viewBox="0 0 100 100" class="w-full h-full">
+                                <!-- Background Hair -->
+                                <circle cx="50" cy="50" r="46" fill="#FB8C00"/>
+                                <circle cx="50" cy="50" r="38" fill="#FBC02D"/>
+                                <!-- Face -->
+                                <circle cx="50" cy="52" r="28" fill="#FFECB3"/>
+                                <!-- Cheeks -->
+                                <circle cx="36" cy="58" r="5" fill="#FF8A80" opacity="0.6"/>
+                                <circle cx="64" cy="58" r="5" fill="#FF8A80" opacity="0.6"/>
+                                <!-- Eyes (Smiling) -->
+                                <path d="M 36 50 Q 40 44 44 50" stroke="#4A3B32" stroke-width="3" fill="none" stroke-linecap="round"/>
+                                <path d="M 56 50 Q 60 44 64 50" stroke="#4A3B32" stroke-width="3" fill="none" stroke-linecap="round"/>
+                                <!-- Smile Mouth -->
+                                <path d="M 42 60 Q 50 68 58 60" stroke="#4A3B32" stroke-width="3" fill="none" stroke-linecap="round"/>
+                                <!-- Sunflower Petals Headband -->
+                                <circle cx="50" cy="22" r="6" fill="#FFF59D"/>
+                                <circle cx="40" cy="24" r="5" fill="#FFEE58"/>
+                                <circle cx="60" cy="24" r="5" fill="#FFEE58"/>
+                                <circle cx="50" cy="22" r="3" fill="#FB8C00"/>
+                            </svg>
+                        </div>
+                        <span class="absolute -bottom-1 -right-1 bg-warmOrange-500 text-white text-[10px] px-1.5 py-0.5 rounded-full font-bold shadow">管理栄養士</span>
+                    </div>
+
+                    <!-- Speech Bubble -->
+                    <div class="flex-1 bg-white p-3.5 rounded-2xl border border-sunflower-300 shadow-sm relative bubble-arrow">
+                        <div class="flex items-center justify-between mb-1">
+                            <span class="font-bold text-xs text-amber-800 flex items-center gap-1">
+                                ゆかちゃん 🌻
+                            </span>
+                            <span class="text-[10px] text-amber-600 bg-sunflower-100 px-2 py-0.5 rounded-full font-bold">今日メッセージ</span>
+                        </div>
+                        <p id="yuka-greeting" class="text-xs text-amber-950 font-medium leading-relaxed">
+                            「masaさん、お疲れさま！今日も美味しいもの食べて元気チャージしよ〜！食べたご飯の写真があったら見せてね 🥪✨」
+                        </p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Navigation Tabs -->
+            <div class="flex bg-amber-100/60 p-1 rounded-xl gap-1 text-sm font-bold text-amber-900 border border-sunflower-200">
+                <button id="tab-home" onclick="switchTab('home')" class="flex-1 py-2 text-center rounded-lg bg-white shadow-sm text-warmOrange-600 font-extrabold flex items-center justify-center gap-1 transition-all">
+                    <i class="fa-solid fa-utensils"></i> 今日のごはん
+                </button>
+                <button id="tab-calendar" onclick="switchTab('calendar')" class="flex-1 py-2 text-center rounded-lg text-amber-700 hover:text-amber-900 flex items-center justify-center gap-1 transition-all">
+                    <i class="fa-solid fa-calendar-days"></i> ひまわりカレンダー
+                </button>
+            </div>
+
+            <!-- TAB CONTENT 1: HOME (MEAL LOGS) -->
+            <div id="view-home" class="space-y-4">
+                
+                <!-- Quick Nutrition Balance Summary Bar -->
+                <div class="bg-white p-3.5 rounded-xl border border-amber-100 shadow-sm flex items-center justify-between">
+                    <span class="text-xs font-bold text-amber-900">本日のバランスチェック:</span>
+                    <div class="flex items-center gap-3 text-xs font-bold">
+                        <div class="flex items-center gap-1" id="badge-staple">
+                            <span class="w-3 h-3 rounded-full bg-red-400 inline-block"></span>
+                            <span class="text-amber-900">主食</span>
+                            <span id="count-staple" class="text-xs text-amber-600 font-normal">(0)</span>
+                        </div>
+                        <div class="flex items-center gap-1" id="badge-main">
+                            <span class="w-3 h-3 rounded-full bg-amber-400 inline-block"></span>
+                            <span class="text-amber-900">主菜</span>
+                            <span id="count-main" class="text-xs text-amber-600 font-normal">(0)</span>
+                        </div>
+                        <div class="flex items-center gap-1" id="badge-side">
+                            <span class="w-3 h-3 rounded-full bg-veggieGreen-400 inline-block"></span>
+                            <span class="text-amber-900">副菜</span>
+                            <span id="count-side" class="text-xs text-amber-600 font-normal">(0)</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 4 Meal Cards Grid -->
+                <div class="grid grid-cols-1 gap-3.5">
+                    
+                    <!-- Morning Meal -->
+                    <div id="meal-card-breakfast" onclick="openRecordModal('breakfast')" class="bg-white rounded-2xl p-4 border border-amber-200 shadow-card hover:border-sunflower-400 transition-all cursor-pointer relative overflow-hidden group">
+                        <div class="flex items-center justify-between">
+                            <div class="flex items-center gap-3">
+                                <div class="w-12 h-12 rounded-xl bg-amber-100 text-warmOrange-500 flex items-center justify-center text-xl font-bold group-hover:bg-sunflower-200 transition-colors">
+                                    🌅
+                                </div>
+                                <div>
+                                    <div class="flex items-center gap-2">
+                                        <h3 class="font-bold text-amber-950 text-base">朝ごはん</h3>
+                                        <span id="status-breakfast" class="text-[10px] bg-gray-100 text-gray-500 px-2 py-0.5 rounded-full font-bold">未記録</span>
+                                    </div>
+                                    <p id="desc-breakfast" class="text-xs text-amber-800/70 mt-0.5">タップして記録・相談する</p>
+                                </div>
+                            </div>
+                            <div id="thumb-breakfast" class="w-14 h-14 rounded-lg bg-amber-50 border border-dashed border-amber-200 flex items-center justify-center text-amber-300 text-lg">
+                                <i class="fa-solid fa-camera"></i>
+                            </div>
+                        </div>
+                        <div id="tags-breakfast" class="hidden mt-2.5 pt-2.5 border-t border-amber-100 flex items-center gap-2 flex-wrap"></div>
+                    </div>
+
+                    <!-- Lunch Meal -->
+                    <div id="meal-card-lunch" onclick="openRecordModal('lunch')" class="bg-white rounded-2xl p-4 border border-amber-200 shadow-card hover:border-sunflower-400 transition-all cursor-pointer relative overflow-hidden group">
+                        <div class="flex items-center justify-between">
+                            <div class="flex items-center gap-3">
+                                <div class="w-12 h-12 rounded-xl bg-amber-100 text-warmOrange-500 flex items-center justify-center text-xl font-bold group-hover:bg-sunflower-200 transition-colors">
+                                    ☀️
+                                </div>
+                                <div>
+                                    <div class="flex items-center gap-2">
+                                        <h3 class="font-bold text-amber-950 text-base">昼ごはん</h3>
+                                        <span id="status-lunch" class="text-[10px] bg-gray-100 text-gray-500 px-2 py-0.5 rounded-full font-bold">未記録</span>
+                                    </div>
+                                    <p id="desc-lunch" class="text-xs text-amber-800/70 mt-0.5">タップして記録・相談する</p>
+                                </div>
+                            </div>
+                            <div id="thumb-lunch" class="w-14 h-14 rounded-lg bg-amber-50 border border-dashed border-amber-200 flex items-center justify-center text-amber-300 text-lg">
+                                <i class="fa-solid fa-camera"></i>
+                            </div>
+                        </div>
+                        <div id="tags-lunch" class="hidden mt-2.5 pt-2.5 border-t border-amber-100 flex items-center gap-2 flex-wrap"></div>
+                    </div>
+
+                    <!-- Dinner Meal -->
+                    <div id="meal-card-dinner" onclick="openRecordModal('dinner')" class="bg-white rounded-2xl p-4 border border-amber-200 shadow-card hover:border-sunflower-400 transition-all cursor-pointer relative overflow-hidden group">
+                        <div class="flex items-center justify-between">
+                            <div class="flex items-center gap-3">
+                                <div class="w-12 h-12 rounded-xl bg-amber-100 text-warmOrange-500 flex items-center justify-center text-xl font-bold group-hover:bg-sunflower-200 transition-colors">
+                                    🌙
+                                </div>
+                                <div>
+                                    <div class="flex items-center gap-2">
+                                        <h3 class="font-bold text-amber-950 text-base">夜ごはん</h3>
+                                        <span id="status-dinner" class="text-[10px] bg-gray-100 text-gray-500 px-2 py-0.5 rounded-full font-bold">未記録</span>
+                                    </div>
+                                    <p id="desc-dinner" class="text-xs text-amber-800/70 mt-0.5">タップして記録・相談する</p>
+                                </div>
+                            </div>
+                            <div id="thumb-dinner" class="w-14 h-14 rounded-lg bg-amber-50 border border-dashed border-amber-200 flex items-center justify-center text-amber-300 text-lg">
+                                <i class="fa-solid fa-camera"></i>
+                            </div>
+                        </div>
+                        <div id="tags-dinner" class="hidden mt-2.5 pt-2.5 border-t border-amber-100 flex items-center gap-2 flex-wrap"></div>
+                    </div>
+
+                    <!-- Snack Meal -->
+                    <div id="meal-card-snack" onclick="openRecordModal('snack')" class="bg-white rounded-2xl p-4 border border-amber-200 shadow-card hover:border-sunflower-400 transition-all cursor-pointer relative overflow-hidden group">
+                        <div class="flex items-center justify-between">
+                            <div class="flex items-center gap-3">
+                                <div class="w-12 h-12 rounded-xl bg-amber-100 text-warmOrange-500 flex items-center justify-center text-xl font-bold group-hover:bg-sunflower-200 transition-colors">
+                                    ☕
+                                </div>
+                                <div>
+                                    <div class="flex items-center gap-2">
+                                        <h3 class="font-bold text-amber-950 text-base">間食・おやつ</h3>
+                                        <span id="status-snack" class="text-[10px] bg-gray-100 text-gray-500 px-2 py-0.5 rounded-full font-bold">未記録</span>
+                                    </div>
+                                    <p id="desc-snack" class="text-xs text-amber-800/70 mt-0.5">ちょっとしたお菓子・飲み物など</p>
+                                </div>
+                            </div>
+                            <div id="thumb-snack" class="w-14 h-14 rounded-lg bg-amber-50 border border-dashed border-amber-200 flex items-center justify-center text-amber-300 text-lg">
+                                <i class="fa-solid fa-camera"></i>
+                            </div>
+                        </div>
+                        <div id="tags-snack" class="hidden mt-2.5 pt-2.5 border-t border-amber-100 flex items-center gap-2 flex-wrap"></div>
+                    </div>
+
+                </div>
+
+                <!-- Floating Big Add Button -->
+                <button onclick="openRecordModal('lunch')" class="w-full bg-gradient-to-r from-sunflower-400 to-warmOrange-500 hover:from-sunflower-500 hover:to-warmOrange-600 text-white font-extrabold py-3.5 px-6 rounded-2xl shadow-lg border border-amber-300 flex items-center justify-center gap-2 text-base transform active:scale-98 transition-all">
+                    <i class="fa-solid fa-plus-circle text-xl"></i>
+                    写真を撮ってゆかちゃんに見せる 🌻
+                </button>
+            </div>
+
+            <!-- TAB CONTENT 2: CALENDAR & WEEKLY REVIEW -->
+            <div id="view-calendar" class="hidden space-y-4">
+                
+                <!-- Calendar Card -->
+                <div class="bg-white p-4 rounded-2xl border border-amber-200 shadow-card">
+                    <div class="flex items-center justify-between mb-3">
+                        <h2 class="font-bold text-amber-950 text-sm flex items-center gap-1.5">
+                            <span class="text-lg">🌻</span> 今月のひまわりノート (2026年9月)
+                        </h2>
+                        <span class="text-xs bg-sunflower-100 text-amber-900 px-2 py-0.5 rounded-full font-bold">18日咲いたよ！</span>
+                    </div>
+
+                    <!-- Mini Month Grid Representation -->
+                    <div class="grid grid-cols-7 gap-1 text-center text-xs mb-1 font-bold text-amber-800/60">
+                        <div>日</div><div>月</div><div>火</div><div>水</div><div>木</div><div>金</div><div>土</div>
+                    </div>
+                    <div id="calendar-grid" class="grid grid-cols-7 gap-1.5 text-center text-xs">
+                        <!-- JS populated -->
+                    </div>
+                </div>
+
+                <!-- Weekly Review Card from Yuka-chan -->
+                <div class="bg-gradient-to-br from-veggieGreen-100/60 to-sunflower-50 p-4 rounded-2xl border border-veggieGreen-400/40 shadow-sm relative">
+                    <div class="flex items-center gap-2 mb-2">
+                        <div class="w-8 h-8 rounded-full bg-sunflower-400 flex items-center justify-center text-sm shadow-sm">🌻</div>
+                        <div>
+                            <h3 class="font-bold text-xs text-amber-950">ゆかちゃんの今週の振り返り</h3>
+                            <p class="text-[10px] text-amber-800">9月21日 〜 9月27日</p>
+                        </div>
+                    </div>
+                    <p class="text-xs text-amber-950 leading-relaxed font-medium bg-white/80 backdrop-blur-sm p-3 rounded-xl border border-amber-200">
+                        「今週もすごーく頑張ったね！👏 忙しい日もあったのに、緑のお野菜（副菜）がしっかり選べてた日が4日もありました！えらい！<br>
+                        ちょっと疲れが出やすい時期だから、無理せずスープや味噌汁でリラックスしてね🍵✨」
+                    </p>
+                </div>
+
+            </div>
+
+        </main>
+
+        <!-- RECORD MODAL -->
+        <div id="modal-record" class="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 flex items-end justify-center hidden opacity-0 transition-opacity duration-300">
+            <div class="bg-white w-full max-w-md rounded-t-3xl max-h-[90vh] overflow-y-auto p-5 space-y-4 shadow-2xl border-t-2 border-sunflower-400 transform translate-y-full transition-transform duration-300" id="modal-content">
+                
+                <!-- Modal Header -->
+                <div class="flex items-center justify-between border-b border-amber-100 pb-3">
+                    <div class="flex items-center gap-2">
+                        <span class="text-xl">📷</span>
+                        <h2 class="font-bold text-lg text-amber-950">ごはんを記録する</h2>
+                    </div>
+                    <button onclick="closeRecordModal()" class="w-8 h-8 rounded-full bg-amber-50 hover:bg-amber-100 text-amber-800 flex items-center justify-center">
+                        <i class="fa-solid fa-xmark"></i>
+                    </button>
+                </div>
+
+                <!-- Meal Type Selector Buttons -->
+                <div>
+                    <label class="block text-xs font-bold text-amber-900 mb-1.5">いつのごはん？</label>
+                    <div class="grid grid-cols-4 gap-2 text-xs font-bold">
+                        <button type="button" onclick="selectMealType('breakfast')" id="mbtn-breakfast" class="py-2 rounded-xl border border-amber-200 text-amber-900 bg-amber-50 hover:bg-sunflower-100 flex flex-col items-center gap-1">
+                            <span>🌅</span> 朝
+                        </button>
+                        <button type="button" onclick="selectMealType('lunch')" id="mbtn-lunch" class="py-2 rounded-xl border border-amber-200 text-amber-900 bg-amber-50 hover:bg-sunflower-100 flex flex-col items-center gap-1">
+                            <span>☀️</span> 昼
+                        </button>
+                        <button type="button" onclick="selectMealType('dinner')" id="mbtn-dinner" class="py-2 rounded-xl border border-amber-200 text-amber-900 bg-amber-50 hover:bg-sunflower-100 flex flex-col items-center gap-1">
+                            <span>🌙</span> 夜
+                        </button>
+                        <button type="button" onclick="selectMealType('snack')" id="mbtn-snack" class="py-2 rounded-xl border border-amber-200 text-amber-900 bg-amber-50 hover:bg-sunflower-100 flex flex-col items-center gap-1">
+                            <span>☕</span> 間食
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Photo Upload Area -->
+                <div>
+                    <label class="block text-xs font-bold text-amber-900 mb-1.5">ごはんの写真</label>
+                    <div onclick="triggerSamplePhoto()" class="border-2 border-dashed border-sunflower-300 rounded-2xl p-4 bg-sunflower-50/50 hover:bg-sunflower-50 transition-all text-center cursor-pointer relative overflow-hidden group">
+                        <input type="file" id="file-input" class="hidden" accept="image/*" onchange="handleImageUpload(event)">
+                        <div id="photo-placeholder" class="py-2 flex flex-col items-center justify-center gap-2">
+                            <div class="w-12 h-12 rounded-full bg-sunflower-200 text-warmOrange-600 flex items-center justify-center text-xl group-hover:scale-110 transition-transform">
+                                <i class="fa-solid fa-camera"></i>
+                            </div>
+                            <p class="text-xs font-bold text-amber-900">写真を撮る・または選択</p>
+                            <p class="text-[10px] text-amber-700">（タップでデモ用サンプル写真を自動挿入できます）</p>
+                        </div>
+                        <img id="photo-preview" class="hidden w-full h-44 object-cover rounded-xl shadow-sm" alt="Meal preview">
+                    </div>
+                </div>
+
+                <!-- Intuitive 3 Color Checkboxes -->
+                <div>
+                    <label class="block text-xs font-bold text-amber-900 mb-1.5">食べたもののチェック（だいたいでOK！👍）</label>
+                    <div class="grid grid-cols-3 gap-2">
+                        <label id="lbl-staple" class="border border-amber-200 rounded-xl p-2.5 flex flex-col items-center gap-1 cursor-pointer hover:bg-red-50 transition-colors">
+                            <input type="checkbox" id="chk-staple" class="hidden" onchange="toggleNutriCheck('staple')">
+                            <span class="w-4 h-4 rounded-full border border-red-400 flex items-center justify-center text-[10px] text-white" id="icon-staple"></span>
+                            <span class="text-xs font-bold text-amber-950">🔴 主食</span>
+                            <span class="text-[9px] text-amber-700">ご飯・パン・麺</span>
+                        </label>
+
+                        <label id="lbl-main" class="border border-amber-200 rounded-xl p-2.5 flex flex-col items-center gap-1 cursor-pointer hover:bg-amber-50 transition-colors">
+                            <input type="checkbox" id="chk-main" class="hidden" onchange="toggleNutriCheck('main')">
+                            <span class="w-4 h-4 rounded-full border border-amber-400 flex items-center justify-center text-[10px] text-white" id="icon-main"></span>
+                            <span class="text-xs font-bold text-amber-950">🟡 主菜</span>
+                            <span class="text-[9px] text-amber-700">肉・魚・卵・豆腐</span>
+                        </label>
+
+                        <label id="lbl-side" class="border border-amber-200 rounded-xl p-2.5 flex flex-col items-center gap-1 cursor-pointer hover:bg-emerald-50 transition-colors">
+                            <input type="checkbox" id="chk-side" class="hidden" onchange="toggleNutriCheck('side')">
+                            <span class="w-4 h-4 rounded-full border border-emerald-400 flex items-center justify-center text-[10px] text-white" id="icon-side"></span>
+                            <span class="text-xs font-bold text-amber-950">🟢 副菜</span>
+                            <span class="text-[9px] text-amber-700">野菜・きのこ・海藻</span>
+                        </label>
+                    </div>
+                </div>
+
+                <!-- Condition Stamps -->
+                <div>
+                    <label class="block text-xs font-bold text-amber-900 mb-1.5">いまの体調・気分は？</label>
+                    <div class="flex gap-2 overflow-x-auto pb-1 text-xs">
+                        <button type="button" onclick="selectCondition('元気😁')" class="cond-btn shrink-0 border border-amber-200 px-3 py-1.5 rounded-full bg-white hover:bg-sunflower-100 font-bold text-amber-900">元気 😁</button>
+                        <button type="button" onclick="selectCondition('ふつう😊')" class="cond-btn shrink-0 border border-amber-200 px-3 py-1.5 rounded-full bg-white hover:bg-sunflower-100 font-bold text-amber-900">ふつう 😊</button>
+                        <button type="button" onclick="selectCondition('疲れ気味😮‍💨')" class="cond-btn shrink-0 border border-amber-200 px-3 py-1.5 rounded-full bg-white hover:bg-sunflower-100 font-bold text-amber-900">疲れ気味 😮‍💨</button>
+                        <button type="button" onclick="selectCondition('腹ペコ🤤')" class="cond-btn shrink-0 border border-amber-200 px-3 py-1.5 rounded-full bg-white hover:bg-sunflower-100 font-bold text-amber-900">腹ペコ 🤤</button>
+                        <button type="button" onclick="selectCondition('コンビニ飯🏪')" class="cond-btn shrink-0 border border-amber-200 px-3 py-1.5 rounded-full bg-white hover:bg-sunflower-100 font-bold text-amber-900">コンビニ飯 🏪</button>
+                    </div>
+                </div>
+
+                <!-- Memo Text area -->
+                <div>
+                    <label class="block text-xs font-bold text-amber-900 mb-1">ひと言メモ（ゆかちゃんに伝えたいこと）</label>
+                    <textarea id="input-memo" rows="2" class="w-full border border-amber-200 rounded-xl p-2.5 text-xs text-amber-950 focus:outline-none focus:border-sunflower-400 bg-amber-50/30" placeholder="「今日は外食になっちゃった」「お腹いっぱいです！」など自由に入力..."></textarea>
+                </div>
+
+                <!-- Submit Button -->
+                <button onclick="saveMealRecord()" class="w-full bg-gradient-to-r from-sunflower-400 to-warmOrange-500 hover:from-sunflower-500 hover:to-warmOrange-600 text-white font-extrabold py-3.5 px-6 rounded-2xl shadow-md border border-amber-300 flex items-center justify-center gap-2 text-sm transform active:scale-98 transition-all">
+                    保存してゆかちゃんに見せる 🌻
+                </button>
+
+            </div>
+        </div>
+
+        <!-- ADVICE MODAL (FEEDBACK FROM YUKA-CHAN) -->
+        <div id="modal-advice" class="fixed inset-0 bg-black/60 backdrop-blur-sm z-50 flex items-center justify-center p-4 hidden">
+            <div class="bg-white w-full max-w-sm rounded-3xl p-5 space-y-4 shadow-2xl border-2 border-sunflower-400 relative animate-bounce-short">
+                
+                <div class="text-center relative">
+                    <div class="w-20 h-20 rounded-full bg-sunflower-300 border-4 border-white shadow-md mx-auto -mt-12 flex items-center justify-center overflow-hidden">
+                        <svg viewBox="0 0 100 100" class="w-full h-full">
+                            <circle cx="50" cy="50" r="46" fill="#FB8C00"/>
+                            <circle cx="50" cy="50" r="38" fill="#FBC02D"/>
+                            <circle cx="50" cy="52" r="28" fill="#FFECB3"/>
+                            <circle cx="36" cy="58" r="5" fill="#FF8A80" opacity="0.6"/>
+                            <circle cx="64" cy="58" r="5" fill="#FF8A80" opacity="0.6"/>
+                            <path d="M 36 50 Q 40 44 44 50" stroke="#4A3B32" stroke-width="3" fill="none" stroke-linecap="round"/>
+                            <path d="M 56 50 Q 60 44 64 50" stroke="#4A3B32" stroke-width="3" fill="none" stroke-linecap="round"/>
+                            <path d="M 42 60 Q 50 68 58 60" stroke="#4A3B32" stroke-width="3" fill="none" stroke-linecap="round"/>
+                        </svg>
+                    </div>
+                    <span class="inline-block mt-2 text-xs font-extrabold bg-sunflower-100 text-amber-900 px-3 py-1 rounded-full border border-sunflower-300">
+                        ゆかちゃんからのワンポイント 🌻
+                    </span>
+                </div>
+
+                <div class="bg-amber-50/70 p-3.5 rounded-2xl border border-amber-200">
+                    <p id="advice-text" class="text-xs text-amber-950 font-medium leading-relaxed">
+                        <!-- Dynamic Text -->
+                    </p>
+                </div>
+
+                <!-- Realistic Convenient Tip -->
+                <div id="advice-tip-box" class="bg-veggieGreen-100/70 p-3 rounded-xl border border-veggieGreen-400/30 flex items-start gap-2">
+                    <span class="text-base">🏪</span>
+                    <div>
+                        <span class="block text-[11px] font-bold text-veggieGreen-600">コンビニ・ちょい足しヒント</span>
+                        <p id="advice-tip-text" class="text-[11px] text-amber-950 mt-0.5">
+                            <!-- Dynamic Tip -->
+                        </p>
+                    </div>
+                </div>
+
+                <button onclick="closeAdviceModal()" class="w-full bg-sunflower-400 hover:bg-sunflower-500 text-amber-950 font-extrabold py-2.5 rounded-xl text-xs shadow-sm">
+                    ありがとう！また記録するね ✨
+                </button>
+            </div>
+        </div>
+
+    </div>
+
+    <script>
+        // State Management
+        let currentMealType = 'lunch';
+        let selectedCondition = 'ふつう😊';
+        let uploadedImageBase64 = null;
+
+        // Sample Meal Records
+        const mealRecords = {
+            breakfast: null,
+            lunch: null,
+            dinner: null,
+            snack: null
+        };
+
+        // Sample photos for quick testing
+        const samplePhotos = {
+            breakfast: "https://images.unsplash.com/photo-1533089860892-a7c6f0a88666?w=400&q=80",
+            lunch: "https://images.unsplash.com/photo-1546069901-ba9599a7e63c?w=400&q=80",
+            dinner: "https://images.unsplash.com/photo-1512621776951-a57141f2eefd?w=400&q=80",
+            snack: "https://images.unsplash.com/photo-1509440159596-0249088772ff?w=400&q=80"
+        };
+
+        // Initialize Page
+        window.onload = function() {
+            renderCalendar();
+            updateTotalBalanceBadges();
+        };
+
+        function switchTab(tab) {
+            const homeView = document.getElementById('view-home');
+            const calendarView = document.getElementById('view-calendar');
+            const btnHome = document.getElementById('tab-home');
+            const btnCal = document.getElementById('tab-calendar');
+
+            if (tab === 'home') {
+                homeView.classList.remove('hidden');
+                calendarView.classList.add('hidden');
+                btnHome.className = "flex-1 py-2 text-center rounded-lg bg-white shadow-sm text-warmOrange-600 font-extrabold flex items-center justify-center gap-1 transition-all";
+                btnCal.className = "flex-1 py-2 text-center rounded-lg text-amber-700 hover:text-amber-900 flex items-center justify-center gap-1 transition-all";
+            } else {
+                homeView.classList.add('hidden');
+                calendarView.classList.remove('hidden');
+                btnCal.className = "flex-1 py-2 text-center rounded-lg bg-white shadow-sm text-warmOrange-600 font-extrabold flex items-center justify-center gap-1 transition-all";
+                btnHome.className = "flex-1 py-2 text-center rounded-lg text-amber-700 hover:text-amber-900 flex items-center justify-center gap-1 transition-all";
+            }
+        }
+
+        function openRecordModal(type) {
+            currentMealType = type;
+            selectMealType(type);
+            
+            const modal = document.getElementById('modal-record');
+            const content = document.getElementById('modal-content');
+            
+            modal.classList.remove('hidden');
+            setTimeout(() => {
+                modal.classList.remove('opacity-0');
+                content.classList.remove('translate-y-full');
+            }, 10);
+        }
+
+        function closeRecordModal() {
+            const modal = document.getElementById('modal-record');
+            const content = document.getElementById('modal-content');
+            
+            modal.classList.add('opacity-0');
+            content.classList.add('translate-y-full');
+            setTimeout(() => {
+                modal.classList.add('hidden');
+            }, 300);
+        }
+
+        // Select Meal Type inside Modal
+        function selectMealType(type) {
+            currentMealType = type;
+            const types = ['breakfast', 'lunch', 'dinner', 'snack'];
+            types.forEach(t => {
+                const btn = document.getElementById(`mbtn-${t}`);
+                if (t === type) {
+                    btn.className = "py-2 rounded-xl border-2 border-sunflower-500 bg-sunflower-100 text-amber-950 font-bold shadow-sm";
+                } else {
+                    btn.className = "py-2 rounded-xl border border-amber-200 text-amber-900 bg-amber-50/50 hover:bg-sunflower-100 font-medium";
+                }
+            });
+        }
+
+        // Toggle Color Checkboxes
+        function toggleNutriCheck(category) {
+            const chk = document.getElementById(`chk-${category}`);
+            const lbl = document.getElementById(`lbl-${category}`);
+            const icon = document.getElementById(`icon-${category}`);
+
+            chk.checked = !chk.checked;
+
+            if (category === 'staple') {
+                if (chk.checked) {
+                    lbl.classList.add('bg-red-100', 'border-red-400');
+                    icon.classList.add('bg-red-500');
+                    icon.innerText = "✓";
+                } else {
+                    lbl.classList.remove('bg-red-100', 'border-red-400');
+                    icon.classList.remove('bg-red-500');
+                    icon.innerText = "";
+                }
+            } else if (category === 'main') {
+                if (chk.checked) {
+                    lbl.classList.add('bg-amber-100', 'border-amber-400');
+                    icon.classList.add('bg-amber-500');
+                    icon.innerText = "✓";
+                } else {
+                    lbl.classList.remove('bg-amber-100', 'border-amber-400');
+                    icon.classList.remove('bg-amber-500');
+                    icon.innerText = "";
+                }
+            } else if (category === 'side') {
+                if (chk.checked) {
+                    lbl.classList.add('bg-emerald-100', 'border-emerald-400');
+                    icon.classList.add('bg-emerald-500');
+                    icon.innerText = "✓";
+                } else {
+                    lbl.classList.remove('bg-emerald-100', 'border-emerald-400');
+                    icon.classList.remove('bg-emerald-500');
+                    icon.innerText = "";
+                }
+            }
+        }
+
+        // Select Condition
+        function selectCondition(condText) {
+            selectedCondition = condText;
+            const buttons = document.querySelectorAll('.cond-btn');
+            buttons.forEach(btn => {
+                if (btn.innerText.includes(condText)) {
+                    btn.className = "cond-btn shrink-0 border-2 border-sunflower-500 px-3 py-1.5 rounded-full bg-sunflower-200 font-extrabold text-amber-950 shadow-sm";
+                } else {
+                    btn.className = "cond-btn shrink-0 border border-amber-200 px-3 py-1.5 rounded-full bg-white hover:bg-sunflower-100 font-bold text-amber-900";
+                }
+            });
+        }
+
+        function triggerSamplePhoto() {
+            uploadedImageBase64 = samplePhotos[currentMealType] || samplePhotos.lunch;
+            const imgEl = document.getElementById('photo-preview');
+            const placeholder = document.getElementById('photo-placeholder');
+            
+            imgEl.src = uploadedImageBase64;
+            imgEl.classList.remove('hidden');
+            placeholder.classList.add('hidden');
+        }
+
+        function handleImageUpload(e) {
+            const file = e.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function(event) {
+                    uploadedImageBase64 = event.target.result;
+                    const imgEl = document.getElementById('photo-preview');
+                    const placeholder = document.getElementById('photo-placeholder');
+                    imgEl.src = uploadedImageBase64;
+                    imgEl.classList.remove('hidden');
+                    placeholder.classList.add('hidden');
+                };
+                reader.readAsDataURL(file);
+            }
+        }
+
+        function saveMealRecord() {
+            const hasStaple = document.getElementById('chk-staple').checked;
+            const hasMain = document.getElementById('chk-main').checked;
+            const hasSide = document.getElementById('chk-side').checked;
+            const memo = document.getElementById('input-memo').value;
+
+            // Update local state
+            mealRecords[currentMealType] = {
+                image: uploadedImageBase64 || samplePhotos[currentMealType],
+                staple: hasStaple,
+                main: hasMain,
+                side: hasSide,
+                condition: selectedCondition,
+                memo: memo
+            };
+
+            // Update UI card
+            updateMealCardUI(currentMealType);
+            updateTotalBalanceBadges();
+
+            // Close Input Modal
+            closeRecordModal();
+
+            // Show Advice Pop-up from Yuka-chan
+            setTimeout(() => {
+                showAdviceModal(currentMealType, hasStaple, hasMain, hasSide, selectedCondition);
+            }, 350);
+        }
+
+        function updateMealCardUI(type) {
+            const rec = mealRecords[type];
+            if (!rec) return;
+
+            const statusEl = document.getElementById(`status-${type}`);
+            const descEl = document.getElementById(`desc-${type}`);
+            const thumbEl = document.getElementById(`thumb-${type}`);
+            const tagsEl = document.getElementById(`tags-${type}`);
+
+            statusEl.innerText = "記録済み ✨";
+            statusEl.className = "text-[10px] bg-sunflower-200 text-amber-950 px-2 py-0.5 rounded-full font-bold border border-sunflower-400";
+            
+            descEl.innerText = rec.memo ? `「${rec.memo}」` : "きれいに記録できました！";
+
+            thumbEl.innerHTML = `<img src="${rec.image}" class="w-full h-full object-cover rounded-lg shadow-sm">`;
+            thumbEl.className = "w-14 h-14 rounded-lg overflow-hidden border border-amber-300";
+
+            // Render tags
+            tagsEl.classList.remove('hidden');
+            let tagsHtml = '';
+            if (rec.staple) tagsHtml += `<span class="text-[10px] bg-red-100 text-red-700 px-2 py-0.5 rounded-full font-bold">🔴 主食</span>`;
+            if (rec.main) tagsHtml += `<span class="text-[10px] bg-amber-100 text-amber-800 px-2 py-0.5 rounded-full font-bold">🟡 主菜</span>`;
+            if (rec.side) tagsHtml += `<span class="text-[10px] bg-emerald-100 text-emerald-800 px-2 py-0.5 rounded-full font-bold">🟢 副菜</span>`;
+            if (rec.condition) tagsHtml += `<span class="text-[10px] bg-amber-50 text-amber-900 border border-amber-200 px-2 py-0.5 rounded-full font-bold">${rec.condition}</span>`;
+
+            tagsEl.innerHTML = tagsHtml;
+        }
+
+        function updateTotalBalanceBadges() {
+            let stapleCount = 0;
+            let mainCount = 0;
+            let sideCount = 0;
+
+            Object.values(mealRecords).forEach(r => {
+                if (r) {
+                    if (r.staple) stapleCount++;
+                    if (r.main) mainCount++;
+                    if (r.side) sideCount++;
+                }
+            });
+
+            document.getElementById('count-staple').innerText = `(${stapleCount})`;
+            document.getElementById('count-main').innerText = `(${mainCount})`;
+            document.getElementById('count-side').innerText = `(${sideCount})`;
+        }
+
+        function showAdviceModal(type, staple, main, side, condition) {
+            const modal = document.getElementById('modal-advice');
+            const adviceText = document.getElementById('advice-text');
+            const tipText = document.getElementById('advice-tip-text');
+
+            let msg = "";
+            let tip = "";
+
+            if (side && main && staple) {
+                msg = `「すごい！主食・主菜・副菜が揃ってパーフェクトな栄養バランス！今日もお腹も心も喜んでるね🌻 この調子で午後も楽しもう〜！」`;
+                tip = `完璧バランスなので特別な追加は不要！水分（温かいお茶など）をしっかり摂ると消化に良いですよ✨`;
+            } else if (!side && main) {
+                msg = `「お肉やお魚のタンパク質がしっかり摂れていて良い感じ！お肉パワーバッチリだね✨ 夜や次のご飯でお野菜を少し足せるともっと最高だよ！」`;
+                tip = `セブンやローソンなら『カットサラダ』や『豚汁』を1品追加するだけで一気に緑がプラスできます！`;
+            } else if (!main && staple) {
+                msg = `「ご飯やお麺でしっかりエネルギー補給できたね！忙しかったかな？お腹は満たされた？無理せず自分のペースで大丈夫だからね😊」`;
+                tip = `コンビニなら『ゆで卵』や『サラダチキン』『豆乳』を手軽にプラスするとタンパク質がサクッと補えますよ！`;
+            } else {
+                msg = `「今日もお仕事や用事でお疲れさま！しっかり何か食べただけで100点満点だよ💮 疲れ気味なら無理せず温かいものを食べてゆっくり休んでね！」`;
+                tip = `コンビニの温かい『お豆腐の味噌汁』や『フリーズドライスープ』で胃腸を温めてあげましょう🍵`;
+            }
+
+            if (condition.includes('疲れ')) {
+                msg += `<br><br>「ちょっと疲れ気味みたいだから、今日は早めにお風呂に入って休んでね🌻」`;
+            }
+
+            adviceText.innerHTML = msg;
+            tipText.innerText = tip;
+
+            modal.classList.remove('hidden');
+        }
+
+        function closeAdviceModal() {
+            document.getElementById('modal-advice').classList.add('hidden');
+            // Update Top Header Greeting
+            document.getElementById('yuka-greeting').innerText = `「新しい記録ありがとう！ゆかちゃんちゃんと見てるからね🌻 焦らずのんびり、今日も美味しく過ごそう！」`;
+        }
+
+        function renderCalendar() {
+            const grid = document.getElementById('calendar-grid');
+            let html = '';
+            
+            // Days in September 2026 (1-30) - 2026/09/01 is Tuesday (offset 2)
+            const offset = 2;
+            for (let i = 0; i < offset; i++) {
+                html += `<div class="h-10"></div>`;
+            }
+
+            const filledDays = [1, 2, 3, 5, 6, 8, 9, 10, 12, 14, 15, 17, 19, 21, 22, 24, 25, 27];
+
+            for (let day = 1; day <= 30; day++) {
+                const isLogged = filledDays.includes(day);
+                const isToday = day === 27;
+
+                if (isLogged) {
+                    html += `
+                        <div class="h-10 rounded-xl bg-sunflower-100 border ${isToday ? 'border-2 border-warmOrange-500 shadow-sm' : 'border-sunflower-300'} flex flex-col items-center justify-center relative group">
+                            <span class="text-[9px] text-amber-800 font-bold leading-none">${day}</span>
+                            <span class="text-sm leading-none mt-0.5">🌻</span>
+                        </div>
+                    `;
+                } else {
+                    html += `
+                        <div class="h-10 rounded-xl bg-gray-50 border border-gray-100 text-gray-300 flex flex-col items-center justify-center">
+                            <span class="text-[9px] font-bold">${day}</span>
+                        </div>
+                    `;
+                }
+            }
+
+            grid.innerHTML = html;
+        }
+    </script>
+</body>
+</html>
